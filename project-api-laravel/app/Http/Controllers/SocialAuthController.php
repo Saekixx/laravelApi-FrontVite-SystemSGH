@@ -10,12 +10,16 @@ class SocialAuthController extends Controller
     public function redirectToGoogle()
     {
         // Redirigimos al usuario a la página de autenticación de Google
-        return Socialite::driver('google')->stateless()->redirect();
+        /** @var \Laravel\Socialite\Two\GoogleProvider $provider */
+        $provider = Socialite::driver('google');
+        return $provider->stateless()->redirect();
     }
 
     public function handleGoogleCallback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        /** @var \Laravel\Socialite\Two\GoogleProvider $provider */
+        $provider = Socialite::driver('google');
+        $googleUser = $provider->stateless()->user();
 
         // Buscamos o creamos un usuario en la base de datos basado en el correo electrónico de Google
         $user = User::updateOrCreate(

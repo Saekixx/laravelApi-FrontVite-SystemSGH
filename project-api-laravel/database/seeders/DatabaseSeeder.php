@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Llama al seeder de pacientes
+        $this->call(PacienteSeeder::class);
     }
 }
