@@ -32,7 +32,7 @@ class AuthController extends Controller
                 'email' => $user->email,
             ],
             'message' => 'Login exitoso',
-        ]);
+        ], 200);
     }
 
     public function register(Request $request)
@@ -61,6 +61,11 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
             'message' => 'Usuario registrado exitosamente',
         ], 201);
     }
