@@ -1,16 +1,41 @@
 import { Link } from "react-router-dom";
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./card";
-import { Input } from "./input";
-import { Label } from "./label";
+} from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function FormRegister() {
+  const { Registrar, estadoAuth } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const result = await Registrar({
+      name,
+      email,
+      password,
+      password_confirmation: passwordConfirmation,
+    } as any);
+    setLoading(false);
+    if (result?.ok) {
+      navigate("/login");
+    }
+  };
   return (
     <section className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-4 py-10 sm:px-6">
       <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-chart-2/20 blur-3xl" />
@@ -28,13 +53,15 @@ function FormRegister() {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-5" action="">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="name">Nombre</Label>
               <Input
                 id="name"
                 name="name"
                 type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 autoComplete="name"
                 required
                 placeholder="Tu nombre"
@@ -47,6 +74,8 @@ function FormRegister() {
                 id="email"
                 name="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 required
                 placeholder="tuemail@ejemplo.com"
@@ -59,6 +88,8 @@ function FormRegister() {
                 id="password"
                 name="password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
                 required
                 minLength={8}
@@ -74,6 +105,8 @@ function FormRegister() {
                 id="password_confirmation"
                 name="password_confirmation"
                 type="password"
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
                 autoComplete="new-password"
                 required
                 minLength={8}
@@ -81,9 +114,17 @@ function FormRegister() {
               />
             </div>
 
-            <Button type="submit" className="h-10 w-full font-medium">
-              Registrarme
+            <Button
+              type="submit"
+              className="h-10 w-full font-medium"
+              disabled={loading}
+            >
+              {loading ? "Registrando..." : "Registrarme"}
             </Button>
+
+            {estadoAuth.error && (
+              <p className="text-red-500 text-center">{estadoAuth.error}</p>
+            )}
 
             <p className="text-center text-sm text-muted-foreground">
               ¿Ya tienes cuenta?{" "}

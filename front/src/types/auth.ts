@@ -1,8 +1,8 @@
 export type UsuarioAuth = {
   id: number;
-  nombre: string;
+  name: string;
   email: string;
-  rol: "admin" | "medico" | "recepcion";
+  email_verified_at?: string;
 };
 
 export type CredencialesLogin = {
@@ -17,13 +17,11 @@ export type DatosRegistro = {
   password_confirmation: string;
 };
 
-export type SolicitudRecuperacion = {
-  email: string;
-};
-
-export type SolicitudRestablecimiento = {
-  password: string;
-  password_confirmation: string;
+export type AuthResponse = {
+  message: string;
+  accessToken: string;
+  token_type: string;
+  user: UsuarioAuth;
 };
 
 export type EstadoAuth = {

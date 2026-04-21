@@ -7,10 +7,29 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "./ui/label";
+import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 
 function FormLogin() {
+  const { IniciarSesion, estadoAuth } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const result = await IniciarSesion({ email, password });
+    setLoading(false);
+    if (result?.ok) {
+      navigate("/dashboard");
+    }
+  };
+
   return (
     <section className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-4 py-10 sm:px-6">
       <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary/15 blur-3xl" />
@@ -28,13 +47,15 @@ function FormLogin() {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-5" action="">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 required
                 placeholder="tuemail@ejemplo.com"
@@ -55,15 +76,25 @@ function FormLogin() {
                 id="password"
                 name="password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 required
                 placeholder="••••••••"
               />
             </div>
 
-            <Button type="submit" className="h-10 w-full font-medium">
-              Ingresar
+            <Button
+              type="submit"
+              className="h-10 w-full font-medium"
+              disabled={loading}
+            >
+              {loading ? "Ingresando..." : "Ingresar"}
             </Button>
+
+            {estadoAuth.error && (
+              <p className="text-red-500 text-center">{estadoAuth.error}</p>
+            )}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

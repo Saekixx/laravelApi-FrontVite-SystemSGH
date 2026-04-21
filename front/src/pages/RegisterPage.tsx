@@ -1,4 +1,4 @@
-import { FormRegister } from "@/components/ui/FormRegister";
+import { FormRegister } from "@/components/FormRegister";
 
 function RegisterPage() {
   return <FormRegister />;

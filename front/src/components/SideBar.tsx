@@ -2,6 +2,9 @@ import { NavLink } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 type SideBarProps = {
   userName?: string;
@@ -30,6 +33,13 @@ function SideBar({
   className,
 }: SideBarProps) {
   const initials = buildInitials(userName);
+  const { CerrarSesion } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await CerrarSesion();
+    navigate("/login");
+  };
 
   return (
     <aside className={cn("h-full w-full max-w-64", className)}>
@@ -65,20 +75,16 @@ function SideBar({
             ))}
           </nav>
 
-          <NavLink
-            to={logoutItem.to}
-            className={({ isActive }) =>
-              cn(
-                "mt-auto rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                "hover:bg-muted hover:text-foreground",
-                isActive
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "text-muted-foreground",
-              )
-            }
+          <Button
+            onClick={handleLogout}
+            className={cn(
+              "mt-auto rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "hover:bg-muted hover:text-foreground text-muted-foreground",
+            )}
+            variant="outline"
           >
             {logoutItem.label}
-          </NavLink>
+          </Button>
         </CardContent>
       </Card>
     </aside>
