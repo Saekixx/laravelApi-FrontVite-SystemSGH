@@ -127,6 +127,7 @@ export function useAuth() {
 
   return {
     estadoAuth,
+    setEstadoAuth,
     IniciarSesion,
     Registrar,
     CerrarSesion,

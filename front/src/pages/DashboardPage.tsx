@@ -2,16 +2,12 @@ import { SideBar } from "@/components/SideBar";
 import { DashboardStatsCards } from "@/components/dashboard/DashboardStatsCards";
 import { PatientsByMonthChartCard } from "@/components/dashboard/PatientsByMonthChartCard";
 import { PatientsByGenderChartCard } from "@/components/dashboard/PatientsByGenderChartCard";
-import { useAuth } from "@/hooks/useAuth";
 
 function DashboardPage() {
-  const { estadoAuth } = useAuth();
-  const userName = estadoAuth.usuario?.name || "Usuario";
-
   return (
     <main className="h-screen bg-background p-4 sm:p-6">
       <div className="grid h-full w-full gap-6 lg:grid-cols-[16rem_1fr]">
-        <SideBar userName={userName} className="max-w-none" />
+        <SideBar className="max-w-none" />
 
         <section className="space-y-6 overflow-auto pr-1">
           <header>

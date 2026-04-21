@@ -32,9 +32,12 @@ function SideBar({
   userImageUrl,
   className,
 }: SideBarProps) {
-  const initials = buildInitials(userName);
-  const { CerrarSesion } = useAuth();
+  const { CerrarSesion, estadoAuth } = useAuth();
+  const { usuario } = estadoAuth;
   const navigate = useNavigate();
+
+  userName = usuario?.name || userName;
+  const initials = buildInitials(userName);
 
   const handleLogout = async () => {
     await CerrarSesion();

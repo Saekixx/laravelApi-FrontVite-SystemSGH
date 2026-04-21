@@ -5,6 +5,7 @@ import type { EstadoAuth } from "@/types/auth";
 export function StateCompo({ children }: { children: React.ReactNode }) {
   const [estadoAuth, setEstadoAuth] = useState<EstadoAuth>({
     usuario: null,
+    email: undefined,
     autenticado: false,
     cargando: false,
     error: null,

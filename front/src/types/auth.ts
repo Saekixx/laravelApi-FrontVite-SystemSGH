@@ -1,7 +1,7 @@
 export type UsuarioAuth = {
-  id: number;
+  id?: number;
   name: string;
-  email: string;
+  email?: string;
   email_verified_at?: string;
 };
 
@@ -33,6 +33,7 @@ export type AuthResponse = {
 
 export type EstadoAuth = {
   usuario: UsuarioAuth | null;
+  email?: string;
   autenticado: boolean;
   cargando: boolean;
   error: string | null;
