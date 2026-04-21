@@ -61,11 +61,6 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
             'message' => 'Usuario registrado exitosamente',
         ], 201);
     }
@@ -139,7 +134,7 @@ class AuthController extends Controller
     public function resetPasswordForm(Request $request, $token)
     {
         // Redirigimos al usuario a la página de restablecimiento de contraseña en el frontend
-        $frontendUrl = "http://localhost:62994/reestablecer.html";
+        $frontendUrl = "http://localhost:5173/reset-password";
         // Construimos la URL final con el token y el correo electrónico del usuario como parámetros
         $urlFinal = $frontendUrl . "?token=" . $token . "&email=" . urlencode($request->email);
 

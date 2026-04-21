@@ -34,7 +34,7 @@ class SocialAuthController extends Controller
         // Generamos el token
         $token = $user->createToken('auth_token')->plainTextToken;
         // Redirigimos al usuario al frontend con el token y el nombre como parámetros
-        $frontendUrl = "http://localhost:62994/dashboard.html";
+        $frontendUrl = "http://localhost:5173/dashboard";
         // Construimos la URL final con el token y el nombre del usuario
         $urlFinal = $frontendUrl . "?token=" . $token . "&name=" . urlencode($user->name);
 
