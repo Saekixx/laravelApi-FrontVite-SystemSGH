@@ -9,18 +9,22 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 function FormRegister() {
-  const { Registrar, estadoAuth } = useAuth();
+  const { Registrar, estadoAuth, limpiarError } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    limpiarError();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -123,7 +127,9 @@ function FormRegister() {
             </Button>
 
             {estadoAuth.error && (
-              <p className="text-red-500 text-center">{estadoAuth.error}</p>
+              <p className="text-center text-sm text-destructive">
+                {estadoAuth.error}
+              </p>
             )}
 
             <p className="text-center text-sm text-muted-foreground">

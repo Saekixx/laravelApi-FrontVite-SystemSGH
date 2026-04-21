@@ -14,10 +14,16 @@ export type loginErrorResponse = {
 export type registerResponse = {
   access_token: string;
   token_type: string;
-  user: UsuarioAuth;
   message: string;
 };
 
 export type registerErrorResponse = {
   message: string;
+};
+
+export type resetPasswordRequest = {
+  email: string;
+  token: string;
+  password: string;
+  password_confirmation: string;
 };

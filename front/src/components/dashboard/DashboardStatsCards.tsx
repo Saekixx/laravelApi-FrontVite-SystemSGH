@@ -1,5 +1,5 @@
-import { DashboardMetricCard } from "@/components/DashboardCards";
-import { totalPatients } from "@/components/dashboard/dashboardMockData";
+import { DashboardMetricCard } from "@/components/dashboard/DashboardCards";
+import { totalPatients } from "@/components/dashboard/data/dashboardMockData";
 
 function DashboardStatsCards() {
   return (

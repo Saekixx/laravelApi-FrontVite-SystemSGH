@@ -1,4 +1,4 @@
-import { PacientesTable } from "@/components/PacientesTable";
+import { PacientesTable } from "@/components/pacientes/PacientesTable";
 import { SideBar } from "@/components/SideBar";
 
 function PacientesPage() {

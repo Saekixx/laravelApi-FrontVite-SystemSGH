@@ -1,11 +1,11 @@
-import { DashboardSectionCard } from "@/components/DashboardCards";
+import { DashboardSectionCard } from "@/components/dashboard/DashboardCards";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { patientsByMonth } from "@/components/dashboard/dashboardMockData";
+import { patientsByMonth } from "@/components/dashboard/data/dashboardMockData";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 const monthlyChartConfig = {

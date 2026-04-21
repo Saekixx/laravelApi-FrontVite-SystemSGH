@@ -1,4 +1,4 @@
-import { DashboardSectionCard } from "@/components/DashboardCards";
+import { DashboardSectionCard } from "@/components/dashboard/DashboardCards";
 import {
   ChartContainer,
   ChartLegend,
@@ -7,7 +7,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { patientsByGender } from "@/components/dashboard/dashboardMockData";
+import { patientsByGender } from "@/components/dashboard/data/dashboardMockData";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const genderChartConfig = {

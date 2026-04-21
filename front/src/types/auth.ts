@@ -17,6 +17,13 @@ export type DatosRegistro = {
   password_confirmation: string;
 };
 
+export type ResetPassword = {
+  email: string;
+  token: string;
+  password: string;
+  password_confirmation: string;
+};
+
 export type AuthResponse = {
   message: string;
   accessToken: string;

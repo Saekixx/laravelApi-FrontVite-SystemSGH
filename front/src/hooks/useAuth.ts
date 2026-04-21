@@ -1,11 +1,15 @@
-import { useState } from "react";
-import { login, register, logout } from "@/service/Auth/AuthService";
+import {
+  login,
+  register,
+  logout,
+  resetPasswordLink,
+  resetPassword,
+} from "@/service/Auth/AuthService";
+
 import type {
   CredencialesLogin,
   DatosRegistro,
-  AuthResponse,
-  UsuarioAuth,
-  EstadoAuth,
+  ResetPassword,
 } from "@/types/auth";
 
 import type {
@@ -15,13 +19,17 @@ import type {
   registerResponse,
 } from "@/types/apiResponse";
 
+import { useContext } from "react";
+import { authContext } from "@/context/authContext";
+
 export function useAuth() {
-  const [estadoAuth, setEstadoAuth] = useState<EstadoAuth>({
-    usuario: null,
-    autenticado: false,
-    cargando: false,
-    error: null,
-  });
+  const context = useContext(authContext);
+
+  if (!context) {
+    throw new Error("useAuth debe estar dentro de StateCompo");
+  }
+
+  const { estadoAuth, setEstadoAuth } = context;
 
   const IniciarSesion = async (datos: CredencialesLogin) => {
     setEstadoAuth((prev) => ({ ...prev, cargando: true, error: null }));
@@ -53,13 +61,6 @@ export function useAuth() {
       const response: registerResponse = await register(datos);
       // Guarda el token en localStorage
       localStorage.setItem("token", response.access_token);
-      setEstadoAuth((prev) => ({
-        ...prev,
-        usuario: response.user,
-        autenticado: true,
-        cargando: false,
-        error: null,
-      }));
       return { ok: true };
     } catch (error) {
       const errorResponse = error as registerErrorResponse;
@@ -87,10 +88,51 @@ export function useAuth() {
     }
   };
 
+  const GoogleLogin = async () => {
+    try {
+      window.location.href = "http://localhost:8000/api/google-auth/redirect";
+    } catch (error) {
+      // Manejar errores de inicio de sesión con Google si es necesario
+    }
+  };
+
+  const RecuperarPasswordEmail = async (email: string) => {
+    try {
+      await resetPasswordLink(email);
+    } catch (error) {
+      // Manejar errores al enviar el enlace de recuperación de contraseña si es necesario
+      alert(
+        "Error al enviar el enlace de recuperación de contraseña. Por favor, inténtalo de nuevo.",
+      );
+    }
+  };
+
+  const ReestablecerPassword = async (data: ResetPassword) => {
+    try {
+      await resetPassword(data);
+      alert(
+        "Contraseña restablecida exitosamente. Ahora puedes iniciar sesión.",
+      );
+    } catch (error) {
+      // Manejar errores al restablecer la contraseña si es necesario
+      alert(
+        "Error al restablecer la contraseña. Por favor, verifica los datos e inténtalo de nuevo.",
+      );
+    }
+  };
+
+  const limpiarError = () => {
+    setEstadoAuth((prev) => ({ ...prev, error: null }));
+  };
+
   return {
     estadoAuth,
     IniciarSesion,
     Registrar,
     CerrarSesion,
+    GoogleLogin,
+    RecuperarPasswordEmail,
+    ReestablecerPassword,
+    limpiarError,
   };
 }

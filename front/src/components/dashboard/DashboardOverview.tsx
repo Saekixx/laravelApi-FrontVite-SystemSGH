@@ -1,7 +1,7 @@
 import {
   DashboardMetricCard,
   DashboardSectionCard,
-} from "@/components/DashboardCards";
+} from "@/components/dashboard/DashboardCards";
 import {
   ChartContainer,
   ChartLegend,

@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PacienteModal } from "@/components/PacienteModal";
-import { PacienteDetalleModal } from "@/components/PacienteDetalleModal";
+import { PacienteModal } from "@/components/pacientes/PacienteModal";
+import { PacienteDetalleModal } from "@/components/pacientes/PacienteDetalleModal";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

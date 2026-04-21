@@ -10,15 +10,19 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { Label } from "./ui/label";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function FormLogin() {
-  const { IniciarSesion, estadoAuth } = useAuth();
+  const { IniciarSesion, GoogleLogin, estadoAuth, limpiarError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    limpiarError();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,9 +36,11 @@ function FormLogin() {
 
   return (
     <section className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-4 py-10 sm:px-6">
+      {/* Fondos decorativos, sin pointer-events en el contenido */}
       <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-chart-2/20 blur-3xl" />
 
+      {/* El Card y su contenido NO están dentro de pointer-events-none */}
       <Card className="relative z-10 w-full max-w-md border border-border/70 shadow-xl shadow-foreground/5 backdrop-blur-sm">
         <CardHeader className="space-y-2 text-center">
           <p className="text-xs font-semibold tracking-[0.28em] text-muted-foreground uppercase">
@@ -93,7 +99,9 @@ function FormLogin() {
             </Button>
 
             {estadoAuth.error && (
-              <p className="text-red-500 text-center">{estadoAuth.error}</p>
+              <p className="text-center text-sm text-destructive">
+                {estadoAuth.error}
+              </p>
             )}
 
             <div className="relative">
@@ -111,6 +119,7 @@ function FormLogin() {
               type="button"
               id="google-login"
               className="btn-google flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 text-sm font-medium transition-colors hover:bg-muted"
+              onClick={GoogleLogin}
             >
               <img
                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"

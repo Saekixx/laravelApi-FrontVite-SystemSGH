@@ -1,12 +1,12 @@
 import { postConfig } from "../fetchConfig";
 
-import type { loginResponse, registerResponse } from "@/types/apiResponse";
-
 import type {
-  AuthResponse,
-  CredencialesLogin,
-  DatosRegistro,
-} from "@/types/auth";
+  loginResponse,
+  registerResponse,
+  resetPasswordRequest,
+} from "@/types/apiResponse";
+
+import type { CredencialesLogin, DatosRegistro } from "@/types/auth";
 
 export const login = async (
   datos: CredencialesLogin,
@@ -22,4 +22,22 @@ export const register = async (
 
 export const logout = async (): Promise<{ message: string }> => {
   return await postConfig<{ message: string }, {}>("logout", {});
+};
+
+export const resetPasswordLink = async (
+  email: string,
+): Promise<{ message: string }> => {
+  return await postConfig<{ message: string }, { email: string }>(
+    "password/email",
+    { email },
+  );
+};
+
+export const resetPassword = async (
+  data: resetPasswordRequest,
+): Promise<{ message: string }> => {
+  return await postConfig<{ message: string }, resetPasswordRequest>(
+    "password/reset",
+    data,
+  );
 };
