@@ -25,8 +25,9 @@ class SocialAuthController extends Controller
         $user = User::updateOrCreate(
             ['email' => $googleUser->getEmail()],
             [
-                'name' => $googleUser->getName(),
-                'google_id' => $googleUser->getId(),
+                'name' => $googleUser->user['given_name'],
+                'last_name' => $googleUser->user['family_name'],
+                'idGoogle' => $googleUser->getId(),
                 'email_verified_at' => now()
             ]
         );
@@ -34,9 +35,9 @@ class SocialAuthController extends Controller
         // Generamos el token
         $token = $user->createToken('auth_token')->plainTextToken;
         // Redirigimos al usuario al frontend con el token y el nombre como parámetros
-        $frontendUrl = "http://localhost:5173/dashboard";
+        $frontendUrl = "http://localhost:5173/auth/google/callback";
         // Construimos la URL final con el token y el nombre del usuario
-        $urlFinal = $frontendUrl . "?token=" . $token . "&name=" . urlencode($user->name);
+        $urlFinal = $frontendUrl . "?token=" . $token . "&name=" . urlencode($user->name) . "&last_name=" . urlencode($user->last_name) . "&email=" . urlencode($user->email);
 
         return redirect($urlFinal);
     }

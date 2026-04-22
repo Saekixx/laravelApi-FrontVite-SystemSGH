@@ -29,6 +29,7 @@ class AuthController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
             ],
             'message' => 'Login exitoso',
@@ -39,7 +40,11 @@ class AuthController extends Controller
     {
         // Validamos los datos de entrada
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:80',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'dni' => 'required|string|max:20|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -51,6 +56,10 @@ class AuthController extends Controller
         // Creamos el nuevo usuario
         $user = User::create([
             'name' => $request->name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'dni' => $request->dni,
             'email' => $request->email,
             'password' => Hash::make($request->password), // Encriptamos la contraseña antes de guardarla
         ]);
@@ -72,7 +81,11 @@ class AuthController extends Controller
 
         // Validamos los datos de entrada para la actualización del perfil
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:80',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'dni' => 'required|string|max:20|unique:users,dni,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -83,7 +96,12 @@ class AuthController extends Controller
 
         // Actualizamos los datos del usuario
         $user->name = $request->name;
+        $user->address = $request->address;
+        $user->last_name = $request->last_name;
+        $user->phone = $request->phone;
+        $user->dni = $request->dni;
         $user->email = $request->email;
+
         // Si se proporciona una nueva contraseña, la encriptamos antes de guardarla
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);

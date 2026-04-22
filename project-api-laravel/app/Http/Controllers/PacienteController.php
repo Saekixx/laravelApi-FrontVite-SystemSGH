@@ -122,4 +122,20 @@ class PacienteController extends Controller
 
         return response()->json(['message' => 'Paciente eliminado exitosamente'], 200);
     }
+
+    public function isActive($id)
+    {
+        // Buscamos el paciente por su ID para asegurarnos de que existe antes de verificar su estado
+        $paciente = Paciente::find($id);
+        // Si no se encuentra el paciente, retornamos un error 404
+        if (!$paciente) return response()->json(['message' => 'Paciente no encontrado'], 404);
+        // Cambiamos el estado del paciente a activo o inactivo dependiendo de su estado actual
+        $paciente->estado = !$paciente->estado;
+        // Guardamos el cambio en la base de datos
+        $paciente->save();
+
+        return response()->json([
+            'message' => 'Estado del paciente cambiado exitosamente',
+        ], 200);
+    }
 }
