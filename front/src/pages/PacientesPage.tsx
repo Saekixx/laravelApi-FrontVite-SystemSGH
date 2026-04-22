@@ -1,6 +1,8 @@
 import { PacientesTable } from "@/components/pacientes/PacientesTable";
 import { FilterPacientes } from "@/components/pacientes/FilterPacientes";
 import { PacienteDetalleModal } from "@/components/pacientes/PacienteDetalleModal";
+import { PacienteModalDelete } from "@/components/pacientes/PacienteModalDelete";
+import { PacienteModal } from "@/components/pacientes/PacienteModal";
 import { usePaciente } from "@/hooks/usePaciente";
 import { SideBar } from "@/components/SideBar";
 
@@ -23,6 +25,18 @@ function PacientesPage() {
     modalDetalleAbierto,
     setModalDetalleAbierto,
     pacienteSeleccionado,
+    modalFormAbierto,
+    setModalFormAbierto,
+    modalMode,
+    datosForm,
+    onNuevoPaciente,
+    onEditarPaciente,
+    onGuardarPaciente,
+    onAbrirGestion,
+    onCambiarEstado,
+    onEliminar,
+    modalDeleteAbierto,
+    setModalDeleteAbierto,
   } = usePaciente();
 
   return (
@@ -60,10 +74,10 @@ function PacientesPage() {
             <div className="rounded-md border bg-card">
               <PacientesTable
                 columnas={columnasActivas}
-                onCrear={() => console.log("Creando nuevo paciente")}
-                onEditar={(paciente) => console.log("Editando:", paciente)}
+                onCrear={onNuevoPaciente}
+                onEditar={onEditarPaciente}
                 onVerDetalle={onVerDetalle}
-                onEliminar={(paciente) => console.log("Eliminando:", paciente)}
+                onEliminar={onAbrirGestion}
                 pacientes={pacientes}
                 formatFecha={formatFecha}
               />
@@ -75,6 +89,22 @@ function PacientesPage() {
             paciente={pacienteSeleccionado}
             onOpenChange={setModalDetalleAbierto}
             formatearFecha={formatFecha}
+          />
+
+          <PacienteModal
+            open={modalFormAbierto}
+            mode={modalMode}
+            initialValues={datosForm}
+            onOpenChange={setModalFormAbierto}
+            onSave={onGuardarPaciente}
+          />
+
+          <PacienteModalDelete
+            open={modalDeleteAbierto}
+            paciente={pacienteSeleccionado}
+            onOpenChange={setModalDeleteAbierto}
+            onEliminar={onEliminar}
+            onCambiarEstado={onCambiarEstado}
           />
         </section>
       </div>

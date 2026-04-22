@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +23,7 @@ import type { PacienteFormValues } from "@/types/paciente";
 type PacienteModalProps = {
   open: boolean;
   mode: "create" | "edit";
-  initialValues?: PacienteFormValues;
+  initialValues?: PacienteFormValues | null; // Aceptamos null para limpiezas
   onOpenChange: (open: boolean) => void;
   onSave: (values: PacienteFormValues) => void;
 };
@@ -48,35 +48,36 @@ function PacienteModal({
   onOpenChange,
   onSave,
 }: PacienteModalProps) {
+  // Un solo estado tipo objeto es más eficiente para formularios grandes
   const [values, setValues] = useState<PacienteFormValues>(emptyPaciente);
 
+  // Sincroniza el formulario cuando el modal se abre o cambian los valores iniciales
   useEffect(() => {
-    if (!open) return;
-    setValues(initialValues ?? emptyPaciente);
-  }, [initialValues, open]);
+    if (open) {
+      if (mode === "edit" && initialValues) {
+        setValues(initialValues);
+      } else {
+        setValues(emptyPaciente);
+      }
+    }
+  }, [open, mode, initialValues]);
 
-  const title = useMemo(
-    () => (mode === "create" ? "Crear paciente" : "Editar paciente"),
-    [mode],
-  );
-
+  const title = mode === "create" ? "Crear paciente" : "Editar paciente";
   const description =
     mode === "create"
-      ? "Completa la información por secciones para registrar al paciente."
-      : "Actualiza la información del paciente por secciones.";
+      ? "Completa la información para registrar al nuevo paciente."
+      : "Modifica los campos necesarios para actualizar al paciente.";
 
-  function updateField<K extends keyof PacienteFormValues>(
-    key: K,
-    value: PacienteFormValues[K],
-  ) {
+  // Función genérica para actualizar cualquier campo
+  const handleChange = (key: keyof PacienteFormValues, value: any) => {
     setValues((prev) => ({ ...prev, [key]: value }));
-  }
+  };
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSave(values);
+    onSave(values); // Enviamos el objeto completo de estados
     onOpenChange(false);
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -86,75 +87,64 @@ function PacienteModal({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Tabs defaultValue="personal" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="personal">Personal</TabsTrigger>
               <TabsTrigger value="contacto">Contacto</TabsTrigger>
-              <TabsTrigger value="clinico">Clinico</TabsTrigger>
+              <TabsTrigger value="clinico">Clínico</TabsTrigger>
             </TabsList>
 
+            {/* --- SECCIÓN PERSONAL --- */}
             <TabsContent value="personal" className="space-y-4 pt-2">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-dni">DNI</Label>
+                  <Label htmlFor="dni">DNI</Label>
                   <Input
-                    id="paciente-dni"
+                    id="dni"
                     value={values.dni}
-                    onChange={(event) => updateField("dni", event.target.value)}
-                    maxLength={12}
+                    onChange={(e) => handleChange("dni", e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-fecha-nacimiento">
-                    Fecha de nacimiento
-                  </Label>
+                  <Label htmlFor="fecha_nacimiento">Fecha de Nacimiento</Label>
                   <Input
-                    id="paciente-fecha-nacimiento"
+                    id="fecha_nacimiento"
                     type="date"
                     value={values.fecha_nacimiento}
-                    onChange={(event) =>
-                      updateField("fecha_nacimiento", event.target.value)
+                    onChange={(e) =>
+                      handleChange("fecha_nacimiento", e.target.value)
                     }
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-nombres">Nombres</Label>
+                  <Label htmlFor="nombres">Nombres</Label>
                   <Input
-                    id="paciente-nombres"
+                    id="nombres"
                     value={values.nombres}
-                    onChange={(event) =>
-                      updateField("nombres", event.target.value)
-                    }
+                    onChange={(e) => handleChange("nombres", e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-apellidos">Apellidos</Label>
+                  <Label htmlFor="apellidos">Apellidos</Label>
                   <Input
-                    id="paciente-apellidos"
+                    id="apellidos"
                     value={values.apellidos}
-                    onChange={(event) =>
-                      updateField("apellidos", event.target.value)
-                    }
+                    onChange={(e) => handleChange("apellidos", e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="paciente-genero">Genero</Label>
+                  <Label>Género</Label>
                   <Select
                     value={values.genero}
-                    onValueChange={(value) =>
-                      updateField(
-                        "genero",
-                        value as PacienteFormValues["genero"],
-                      )
-                    }
+                    onValueChange={(val) => handleChange("genero", val)}
                   >
-                    <SelectTrigger id="paciente-genero" className="w-full">
-                      <SelectValue placeholder="Selecciona genero" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona género" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Masculino">Masculino</SelectItem>
@@ -166,69 +156,63 @@ function PacienteModal({
               </div>
             </TabsContent>
 
+            {/* --- SECCIÓN CONTACTO --- */}
             <TabsContent value="contacto" className="space-y-4 pt-2">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-celular">Celular</Label>
+                  <Label htmlFor="celular">Celular</Label>
                   <Input
-                    id="paciente-celular"
-                    value={values.celular}
-                    onChange={(event) =>
-                      updateField("celular", event.target.value)
-                    }
-                    placeholder="Opcional"
+                    id="celular"
+                    value={values.celular || ""}
+                    onChange={(e) => handleChange("celular", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-email">Email</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="paciente-email"
+                    id="email"
                     type="email"
-                    value={values.email}
-                    onChange={(event) =>
-                      updateField("email", event.target.value)
-                    }
-                    placeholder="Opcional"
+                    value={values.email || ""}
+                    onChange={(e) => handleChange("email", e.target.value)}
                   />
                 </div>
               </div>
             </TabsContent>
 
+            {/* --- SECCIÓN CLÍNICA --- */}
             <TabsContent value="clinico" className="space-y-4 pt-2">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-tipo-sangre">Tipo de sangre</Label>
+                  <Label htmlFor="tipo_sangre">Tipo de Sangre</Label>
                   <Input
-                    id="paciente-tipo-sangre"
+                    id="tipo_sangre"
                     value={values.tipo_sangre}
-                    onChange={(event) =>
-                      updateField("tipo_sangre", event.target.value)
+                    onChange={(e) =>
+                      handleChange("tipo_sangre", e.target.value)
                     }
                     placeholder="Ej: O+"
-                    required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="paciente-seguro-medico">Seguro medico</Label>
+                  <Label htmlFor="seguro_medico">Seguro Médico</Label>
                   <Input
-                    id="paciente-seguro-medico"
-                    value={values.seguro_medico}
-                    onChange={(event) =>
-                      updateField("seguro_medico", event.target.value)
+                    id="seguro_medico"
+                    value={values.seguro_medico || ""}
+                    onChange={(e) =>
+                      handleChange("seguro_medico", e.target.value)
                     }
-                    placeholder="Opcional"
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="paciente-estado">Estado</Label>
+                  <Label>Estado del Registro</Label>
                   <Select
                     value={values.estado ? "activo" : "inactivo"}
-                    onValueChange={(value) =>
-                      updateField("estado", value === "activo")
+                    onValueChange={(val) =>
+                      handleChange("estado", val === "activo")
                     }
                   >
-                    <SelectTrigger id="paciente-estado" className="w-full">
-                      <SelectValue placeholder="Selecciona estado" />
+                    <SelectTrigger>
+                      <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="activo">Activo</SelectItem>
@@ -240,7 +224,7 @@ function PacienteModal({
             </TabsContent>
           </Tabs>
 
-          <DialogFooter>
+          <DialogFooter className="pt-4">
             <Button
               type="button"
               variant="outline"
@@ -249,7 +233,7 @@ function PacienteModal({
               Cancelar
             </Button>
             <Button type="submit">
-              {mode === "create" ? "Crear" : "Guardar"}
+              {mode === "create" ? "Registrar Paciente" : "Guardar Cambios"}
             </Button>
           </DialogFooter>
         </form>

@@ -1,6 +1,16 @@
 import { useMemo, useState, useEffect } from "react";
-import { getAllPacientes } from "@/service/Paciente/PacienteService";
-import type { ClaveColumnaPaciente, Paciente } from "@/types/paciente";
+import {
+  getAllPacientes,
+  createPaciente,
+  updatePaciente,
+  deletePaciente,
+  estadoPaciente,
+} from "@/service/Paciente/PacienteService";
+import type {
+  ClaveColumnaPaciente,
+  Paciente,
+  PacienteFormValues,
+} from "@/types/paciente";
 
 const columnasPaciente: Array<{ key: ClaveColumnaPaciente; label: string }> = [
   { key: "dni", label: "DNI" },
@@ -52,18 +62,27 @@ export function usePaciente() {
   const [pacienteSeleccionado, setPacienteSeleccionado] =
     useState<Paciente | null>(null);
 
+  // Modal de creación/edición
+  const [modalFormAbierto, setModalFormAbierto] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+  const [datosForm, setDatosForm] = useState<PacienteFormValues | null>(null);
+
+  // Modal de eliminación/estado
+  const [modalDeleteAbierto, setModalDeleteAbierto] = useState(false);
+
+  const cargarDatos = async () => {
+    try {
+      setLoading(true);
+      const response = await getAllPacientes();
+      setPacientes(response?.pacientes || []);
+    } catch (err) {
+      setError("Error al cargar datos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const cargarDatos = async () => {
-      try {
-        setLoading(true);
-        const response = await getAllPacientes();
-        setPacientes(response?.pacientes || []);
-      } catch (err) {
-        setError("Error al cargar datos");
-      } finally {
-        setLoading(false);
-      }
-    };
     cargarDatos();
   }, []);
 
@@ -105,6 +124,84 @@ export function usePaciente() {
     setModalDetalleAbierto(true);
   };
 
+  const onNuevoPaciente = () => {
+    setModalMode("create");
+    setDatosForm(null); // Limpiar datos
+    setModalFormAbierto(true);
+  };
+
+  const onEditarPaciente = (paciente: Paciente) => {
+    setModalMode("edit");
+    // Seteamos el paciente seleccionado para tener el ID a mano
+    setPacienteSeleccionado(paciente);
+    // Pasamos los valores actuales al formulario
+    setDatosForm({
+      dni: paciente.dni,
+      nombres: paciente.nombres,
+      apellidos: paciente.apellidos,
+      fecha_nacimiento: paciente.fecha_nacimiento,
+      genero: paciente.genero,
+      celular: paciente.celular || "",
+      email: paciente.email || "",
+      tipo_sangre: paciente.tipo_sangre,
+      seguro_medico: paciente.seguro_medico || "",
+      estado: paciente.estado,
+    });
+    setModalFormAbierto(true);
+  };
+
+  const onGuardarPaciente = async (values: PacienteFormValues) => {
+    try {
+      setLoading(true);
+      if (modalMode === "create") {
+        await createPaciente(values);
+      } else if (modalMode === "edit" && pacienteSeleccionado) {
+        await updatePaciente(pacienteSeleccionado.id, values);
+      }
+      // Refrescamos la lista completa desde el API
+      await cargarDatos();
+      setModalFormAbierto(false);
+    } catch (err) {
+      setError("Error al guardar el paciente");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onAbrirGestion = (paciente: Paciente) => {
+    setPacienteSeleccionado(paciente);
+    setModalDeleteAbierto(true);
+  };
+
+  const onCambiarEstado = async (paciente: Paciente) => {
+    try {
+      setLoading(true);
+      await estadoPaciente(paciente.id);
+      await cargarDatos();
+      setModalDeleteAbierto(false);
+    } catch (err) {
+      setError("Error al cambiar estado");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onEliminar = async (paciente: Paciente) => {
+    try {
+      setLoading(true);
+      await deletePaciente(paciente.id);
+
+      // Actualizamos la lista local y cerramos
+      await cargarDatos();
+      setModalDeleteAbierto(false);
+    } catch (err) {
+      setError("Error al eliminar el paciente");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     pacientes: pacientesFiltrados,
     loading,
@@ -125,5 +222,19 @@ export function usePaciente() {
     modalDetalleAbierto,
     setModalDetalleAbierto,
     pacienteSeleccionado,
+    // Modal Formulario (Crear/Editar)
+    modalFormAbierto,
+    setModalFormAbierto,
+    modalMode,
+    datosForm,
+    onNuevoPaciente,
+    onEditarPaciente,
+    onGuardarPaciente,
+    // Modal eliminación/estado
+    onAbrirGestion,
+    onCambiarEstado,
+    onEliminar,
+    modalDeleteAbierto,
+    setModalDeleteAbierto,
   };
 }

@@ -37,14 +37,8 @@ export const updatePaciente = async (
   );
 };
 
-export const estadoPaciente = async (
-  id: number,
-  estado: boolean,
-): Promise<PacienteResponse> => {
-  return await putConfig<PacienteResponse, { estado: boolean }>(
-    `pacientes/${id}`,
-    { estado },
-  );
+export const estadoPaciente = async (id: number): Promise<PacienteResponse> => {
+  return await putConfig<PacienteResponse, {}>(`pacientes/activate/${id}`, {});
 };
 
 export const deletePaciente = async (
