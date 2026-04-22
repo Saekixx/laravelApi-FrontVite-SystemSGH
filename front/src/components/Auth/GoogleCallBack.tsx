@@ -10,6 +10,7 @@ export const GoogleCallback = () => {
   useEffect(() => {
     const token = searchParams.get("token");
     const name = searchParams.get("name");
+    const last_name = searchParams.get("last_name");
     const email = searchParams.get("email");
     // Puedes recibir más datos: nombre, avatar, etc.
 
@@ -19,7 +20,11 @@ export const GoogleCallback = () => {
 
       // Actualizar el estado global
       setEstadoAuth({
-        usuario: { name: name || "Usuario", email: email || undefined },
+        usuario: {
+          name: name || "Usuario",
+          last_name: last_name || undefined,
+          email: email || undefined,
+        },
         autenticado: true,
         cargando: false,
         error: null,

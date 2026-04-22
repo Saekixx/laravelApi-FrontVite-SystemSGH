@@ -17,7 +17,7 @@ import type {
   loginErrorResponse,
   registerErrorResponse,
   registerResponse,
-} from "@/types/apiResponse";
+} from "@/types/Api/Auth/apiResponse";
 
 import { useContext } from "react";
 import { authContext } from "@/context/authContext";

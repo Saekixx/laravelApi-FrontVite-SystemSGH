@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 
 type SideBarProps = {
-  userName?: string;
+  name?: string;
+  last_name?: string;
   userImageUrl?: string;
   className?: string;
 };
@@ -28,7 +29,8 @@ function buildInitials(name: string) {
 }
 
 function SideBar({
-  userName = "Usuario",
+  name: userName = "Usuario",
+  last_name: userLastName,
   userImageUrl,
   className,
 }: SideBarProps) {
@@ -37,6 +39,7 @@ function SideBar({
   const navigate = useNavigate();
 
   userName = usuario?.name || userName;
+  userLastName = usuario?.last_name || userLastName;
   const initials = buildInitials(userName);
 
   const handleLogout = async () => {

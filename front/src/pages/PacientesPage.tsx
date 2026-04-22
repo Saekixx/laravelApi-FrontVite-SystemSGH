@@ -1,11 +1,34 @@
 import { PacientesTable } from "@/components/pacientes/PacientesTable";
+import { FilterPacientes } from "@/components/pacientes/FilterPacientes";
+import { PacienteDetalleModal } from "@/components/pacientes/PacienteDetalleModal";
+import { usePaciente } from "@/hooks/usePaciente";
 import { SideBar } from "@/components/SideBar";
 
 function PacientesPage() {
+  const {
+    pacientes,
+    loading,
+    busqueda,
+    setBusqueda,
+    filtroEstado,
+    setFiltroEstado,
+    filtroGenero,
+    setFiltroGenero,
+    columnasTodas,
+    columnasActivas,
+    columnasVisibles,
+    toggleColumna,
+    formatFecha,
+    onVerDetalle,
+    modalDetalleAbierto,
+    setModalDetalleAbierto,
+    pacienteSeleccionado,
+  } = usePaciente();
+
   return (
     <main className="h-screen bg-background p-4 sm:p-6">
       <div className="grid h-full w-full gap-6 lg:grid-cols-[16rem_1fr]">
-        <SideBar userName="Usuario" className="max-w-none" />
+        <SideBar className="max-w-none" />
 
         <section className="space-y-4 overflow-auto pr-1">
           <header>
@@ -17,7 +40,42 @@ function PacientesPage() {
             </p>
           </header>
 
-          <PacientesTable />
+          <FilterPacientes
+            busqueda={busqueda}
+            setBusqueda={setBusqueda}
+            filtroEstado={filtroEstado}
+            setFiltroEstado={setFiltroEstado}
+            filtroGenero={filtroGenero}
+            setFiltroGenero={setFiltroGenero}
+            columnasTodas={columnasTodas}
+            columnasVisibles={columnasVisibles}
+            toggleColumna={toggleColumna}
+          />
+
+          {loading ? (
+            <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
+              Cargando datos de pacientes...
+            </div>
+          ) : (
+            <div className="rounded-md border bg-card">
+              <PacientesTable
+                columnas={columnasActivas}
+                onCrear={() => console.log("Creando nuevo paciente")}
+                onEditar={(paciente) => console.log("Editando:", paciente)}
+                onVerDetalle={onVerDetalle}
+                onEliminar={(paciente) => console.log("Eliminando:", paciente)}
+                pacientes={pacientes}
+                formatFecha={formatFecha}
+              />
+            </div>
+          )}
+
+          <PacienteDetalleModal
+            open={modalDetalleAbierto}
+            paciente={pacienteSeleccionado}
+            onOpenChange={setModalDetalleAbierto}
+            formatearFecha={formatFecha}
+          />
         </section>
       </div>
     </main>

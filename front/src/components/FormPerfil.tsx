@@ -7,21 +7,19 @@ import { Label } from "@/components/ui/label";
 type ProfileData = {
   name: string;
   email: string;
-  phone: string;
-  city: string;
 };
 
 const initialProfile: ProfileData = {
   name: "Usuario Demo",
   email: "usuario@correo.com",
-  phone: "+57 300 123 4567",
-  city: "Bogotá",
 };
 
 function FormPerfil() {
   const [profile, setProfile] = useState<ProfileData>(initialProfile);
   const [draft, setDraft] = useState<ProfileData>(initialProfile);
   const [isEditing, setIsEditing] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   function handleEditToggle() {
     setDraft(profile);
@@ -36,6 +34,8 @@ function FormPerfil() {
   function handleConfirm() {
     setProfile(draft);
     setIsEditing(false);
+    setPassword("");
+    setConfirmPassword("");
   }
 
   function updateField<K extends keyof ProfileData>(
@@ -68,7 +68,7 @@ function FormPerfil() {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6 pt-6">
+      <CardContent className="space-y-6 px-8 py-8">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="profile-image">Foto de perfil</Label>
@@ -101,25 +101,30 @@ function FormPerfil() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="profile-phone">Teléfono</Label>
-            <Input
-              id="profile-phone"
-              value={draft.phone}
-              disabled={!isEditing}
-              onChange={(event) => updateField("phone", event.target.value)}
-            />
-          </div>
-
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="profile-city">Ciudad</Label>
-            <Input
-              id="profile-city"
-              value={draft.city}
-              disabled={!isEditing}
-              onChange={(event) => updateField("city", event.target.value)}
-            />
-          </div>
+          {isEditing && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="profile-password">Nueva contraseña</Label>
+                <Input
+                  id="profile-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="profile-confirm-password">
+                  Confirmar nueva contraseña
+                </Label>
+                <Input
+                  id="profile-confirm-password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

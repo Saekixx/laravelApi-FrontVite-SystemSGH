@@ -16,6 +16,10 @@ import { useNavigate } from "react-router-dom";
 function FormRegister() {
   const { Registrar, estadoAuth, limpiarError } = useAuth();
   const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [dni, setDni] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -31,6 +35,10 @@ function FormRegister() {
     setLoading(true);
     const result = await Registrar({
       name,
+      last_name: lastName,
+      phone,
+      address,
+      dni,
       email,
       password,
       password_confirmation: passwordConfirmation,
@@ -58,21 +66,37 @@ function FormRegister() {
 
         <CardContent>
           <form className="space-y-5" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <Label htmlFor="name">Nombre</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                autoComplete="name"
-                required
-                placeholder="Tu nombre"
-              />
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="name">Nombre</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  autoComplete="name"
+                  required
+                  placeholder="Tu nombre"
+                />
+              </div>
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="last_name">Apellido</Label>
+                <Input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  autoComplete="family-name"
+                  required
+                  placeholder="Tu apellido"
+                  maxLength={80}
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="flex-1 space-y-2">
               <Label htmlFor="email">Correo</Label>
               <Input
                 id="email"
@@ -86,36 +110,79 @@ function FormRegister() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+            {/* Fila 2: DNI y Teléfono */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="dni">DNI</Label>
+                <Input
+                  id="dni"
+                  name="dni"
+                  type="text"
+                  value={dni}
+                  onChange={(e) => setDni(e.target.value)}
+                  required
+                  placeholder="Tu DNI"
+                  maxLength={20}
+                />
+              </div>
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="phone">Teléfono</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="text"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Opcional"
+                  maxLength={20}
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <Label htmlFor="address">Dirección</Label>
               <Input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
-                required
-                minLength={8}
-                placeholder="Mínimo 8 caracteres"
+                id="address"
+                name="address"
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Opcional"
+                maxLength={255}
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password_confirmation">
-                Confirmar contraseña
-              </Label>
-              <Input
-                id="password_confirmation"
-                name="password_confirmation"
-                type="password"
-                value={passwordConfirmation}
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                autoComplete="new-password"
-                required
-                minLength={8}
-                placeholder="Repite tu contraseña"
-              />
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="password">Contraseña</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                  minLength={8}
+                  placeholder="Mínimo 8 caracteres"
+                />
+              </div>
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="password_confirmation">
+                  Confirmar contraseña
+                </Label>
+                <Input
+                  id="password_confirmation"
+                  name="password_confirmation"
+                  type="password"
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                  minLength={8}
+                  placeholder="Repite tu contraseña"
+                />
+              </div>
             </div>
 
             <Button

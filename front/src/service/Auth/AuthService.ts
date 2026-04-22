@@ -4,7 +4,7 @@ import type {
   loginResponse,
   registerResponse,
   resetPasswordRequest,
-} from "@/types/apiResponse";
+} from "@/types/Api/Auth/apiResponse";
 
 import type { CredencialesLogin, DatosRegistro } from "@/types/auth";
 

@@ -1,5 +1,4 @@
-import type { UsuarioAuth } from "./auth";
-
+import type { UsuarioAuth } from "@/types/auth";
 export type loginResponse = {
   access_token: string;
   token_type: string;

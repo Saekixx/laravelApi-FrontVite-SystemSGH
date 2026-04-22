@@ -1,6 +1,7 @@
 export type UsuarioAuth = {
   id?: number;
   name: string;
+  last_name?: string;
   email?: string;
   email_verified_at?: string;
 };
@@ -12,7 +13,11 @@ export type CredencialesLogin = {
 
 export type DatosRegistro = {
   name: string;
+  last_name: string;
   email: string;
+  dni: string;
+  phone: string;
+  address: string;
   password: string;
   password_confirmation: string;
 };
