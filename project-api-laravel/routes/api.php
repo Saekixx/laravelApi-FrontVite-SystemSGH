@@ -22,6 +22,7 @@ Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/profile', [AuthController::class, 'updateProfile']);
+    Route::post('/profileByEmail', [AuthController::class, 'getProfileByEmail']);
 
     // Rutas para gestión de pacientes
     Route::get('/pacientes', [PacienteController::class, 'getPacientes']);

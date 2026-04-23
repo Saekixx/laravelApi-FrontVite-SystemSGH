@@ -31,6 +31,7 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'last_name' => $user->last_name,
                 'email' => $user->email,
+                'avatar_url' => $user->avatar ? asset('storage/' . $user->avatar) : null,
             ],
             'message' => 'Login exitoso',
         ], 200);
@@ -183,5 +184,33 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? response()->json(['message' => 'Contraseña restablecida exitosamente'], 200)
             : response()->json(['message' => 'Error al restablecer la contraseña'], 500);
+    }
+
+    public function getProfileByEmail(Request $request)
+    {
+        // Validamos que el email sea enviado y tenga un formato correcto
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        // Buscamos al usuario por la columna 'email'
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        // Verificamos si el usuario existe
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        return response()->json([
+            'user' => [
+                'name' => $user->name,
+                'last_name' => $user->last_name,
+                'dni' => $user->dni,
+                'phone' => $user->phone,
+                'address' => $user->address,
+                'email' => $user->email,
+            ],
+            'avatar_url' => $user->avatar ? asset('storage/' . $user->avatar) : null,
+        ], 200);
     }
 }
