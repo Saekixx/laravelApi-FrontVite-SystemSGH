@@ -2,8 +2,16 @@ import { SideBar } from "@/components/SideBar";
 import { DashboardStatsCards } from "@/components/dashboard/DashboardStatsCards";
 import { PatientsByMonthChartCard } from "@/components/dashboard/PatientsByMonthChartCard";
 import { PatientsByGenderChartCard } from "@/components/dashboard/PatientsByGenderChartCard";
+import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 function DashboardPage() {
+  const { cargarPerfilCompleto } = useAuth();
+
+  useEffect(() => {
+    cargarPerfilCompleto();
+  }, [cargarPerfilCompleto]);
+
   return (
     <main className="h-screen bg-background p-4 sm:p-6">
       <div className="grid h-full w-full gap-6 lg:grid-cols-[16rem_1fr]">

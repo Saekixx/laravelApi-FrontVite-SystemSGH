@@ -4,7 +4,11 @@ import {
   logout,
   resetPasswordLink,
   resetPassword,
+  getprofile,
+  actualizarProfile,
 } from "@/service/Auth/AuthService";
+
+import type { UsuarioAuth } from "@/types/auth";
 
 import type {
   CredencialesLogin,
@@ -19,8 +23,9 @@ import type {
   registerResponse,
 } from "@/types/Api/Auth/apiResponse";
 
-import { useContext } from "react";
+import { useContext, useState, useCallback } from "react";
 import { authContext } from "@/context/authContext";
+import type { profile } from "@/types/Api/Auth/apiResponse";
 
 export function useAuth() {
   const context = useContext(authContext);
@@ -30,6 +35,7 @@ export function useAuth() {
   }
 
   const { estadoAuth, setEstadoAuth } = context;
+  const [profile, setProfile] = useState<profile | null>(null);
 
   const IniciarSesion = async (datos: CredencialesLogin) => {
     setEstadoAuth((prev) => ({ ...prev, cargando: true, error: null }));
@@ -125,6 +131,71 @@ export function useAuth() {
     setEstadoAuth((prev) => ({ ...prev, error: null }));
   };
 
+  const obtenerProfile = async (email: string) => {
+    try {
+      const response = await getprofile(email);
+      if (response && response.user) {
+        const perfilCompleto = {
+          ...response.user,
+          avatar: response.avatar_url,
+        };
+        setProfile(perfilCompleto);
+      }
+    } catch (error) {
+      console.log("Error al obtener el perfil:", error);
+    }
+  };
+
+  const guardarProfile = async (datos: any) => {
+    try {
+      const response = await actualizarProfile(datos);
+
+      if (response && response.user) {
+        const perfilActualizado = {
+          ...response.user,
+          avatar: response.avatar_url,
+        };
+
+        setProfile(perfilActualizado);
+
+        setEstadoAuth((prev) => ({
+          ...prev,
+          usuario: perfilActualizado,
+        }));
+
+        console.log("Estado global sincronizado con nueva foto");
+      }
+
+      return response;
+    } catch (error) {
+      console.error("Error al guardar:", error);
+      throw error;
+    }
+  };
+
+  const cargarPerfilCompleto = useCallback(async () => {
+    const email = estadoAuth.email || estadoAuth.usuario?.email;
+
+    if (email && !estadoAuth.usuario?.avatar) {
+      try {
+        const response = await getprofile(email);
+
+        if (response?.user) {
+          setEstadoAuth((prev) => ({
+            ...prev,
+            usuario: {
+              ...response.user,
+              avatar: response.avatar_url,
+            },
+            email: email,
+          }));
+        }
+      } catch (error) {
+        console.error("Error al sincronizar perfil:", error);
+      }
+    }
+  }, [estadoAuth.email, estadoAuth.usuario?.email, setEstadoAuth]);
+
   return {
     estadoAuth,
     setEstadoAuth,
@@ -135,5 +206,10 @@ export function useAuth() {
     RecuperarPasswordEmail,
     ReestablecerPassword,
     limpiarError,
+    profile,
+    setProfile,
+    obtenerProfile,
+    guardarProfile,
+    cargarPerfilCompleto,
   };
 }

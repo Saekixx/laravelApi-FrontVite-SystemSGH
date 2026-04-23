@@ -4,6 +4,7 @@ export type UsuarioAuth = {
   last_name?: string;
   email?: string;
   email_verified_at?: string;
+  avatar?: string;
 };
 
 export type CredencialesLogin = {

@@ -1,9 +1,10 @@
-import { postConfig } from "../fetchConfig";
+import { postConfig, postFormData } from "../fetchConfig";
 
 import type {
   loginResponse,
   registerResponse,
   resetPasswordRequest,
+  profileResponse,
 } from "@/types/Api/Auth/apiResponse";
 
 import type { CredencialesLogin, DatosRegistro } from "@/types/auth";
@@ -40,4 +41,17 @@ export const resetPassword = async (
     "password/reset",
     data,
   );
+};
+
+export const getprofile = async (email: string): Promise<profileResponse> => {
+  return await postConfig<profileResponse, { email: string }>(
+    "profileByEmail",
+    { email },
+  );
+};
+
+export const actualizarProfile = async (
+  datos: FormData,
+): Promise<profileResponse> => {
+  return await postFormData<profileResponse>("profile", datos);
 };

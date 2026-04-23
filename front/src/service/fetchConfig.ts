@@ -30,6 +30,33 @@ export async function postConfig<TResponse, TRequest>(
   return data as TResponse;
 }
 
+// Función para realizar una solicitud POST con FormData a la API (útil para subir archivos)
+export async function postFormData<TResponse>(
+  endpoint: string,
+  formData: FormData,
+): Promise<TResponse> {
+  const token = localStorage.getItem("token");
+
+  const headers: Record<string, string> = {
+    Accept: "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+
+  // Realizar la solicitud POST a la API con los datos proporcionados en formato FormData
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
+  // Intentar analizar la respuesta como JSON, pero si falla, devolver un objeto vacío
+  const data = await response.json().catch(() => ({}));
+  // Si la respuesta no es exitosa, lanzar un error con el mensaje proporcionado por la API o un mensaje genérico
+  if (!response.ok)
+    throw new Error(data.message || "Error al procesar el formulario");
+  // Devolver los datos de la respuesta como el tipo esperado
+  return data as TResponse;
+}
+
 // Función para realizar una solicitud GET a la API
 export async function getConfig<TResponse>(
   endpoint: string,

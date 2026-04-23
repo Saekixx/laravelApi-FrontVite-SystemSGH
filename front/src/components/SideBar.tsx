@@ -28,18 +28,18 @@ function buildInitials(name: string) {
   return `${words[0][0]}${words[1][0]}`.toUpperCase();
 }
 
-function SideBar({
-  name: userName = "Usuario",
-  last_name: userLastName,
-  userImageUrl,
-  className,
-}: SideBarProps) {
+function SideBar({ className }: SideBarProps) {
   const { CerrarSesion, estadoAuth } = useAuth();
   const { usuario } = estadoAuth;
   const navigate = useNavigate();
 
-  userName = usuario?.name || userName;
-  userLastName = usuario?.last_name || userLastName;
+  // Priorizamos los datos del contexto global
+  const userName = usuario?.name || "Usuario";
+  const userLastName = usuario?.last_name || "";
+
+  // Usamos el avatar del contexto (que ya tiene la URL completa)
+  const userAvatar = usuario?.avatar || "";
+
   const initials = buildInitials(userName);
 
   const handleLogout = async () => {
@@ -53,12 +53,19 @@ function SideBar({
         <CardContent className="flex h-full flex-col gap-6 p-4">
           <div className="flex flex-col items-center gap-3 border-b border-border/70 pb-5">
             <Avatar className="size-20 ring-2 ring-border/80">
-              <AvatarImage src={userImageUrl} alt={userName} />
+              {/* AvatarImage ahora es reactivo al estado global */}
+              <AvatarImage
+                src={userAvatar}
+                alt={userName}
+                className="object-cover"
+              />
               <AvatarFallback className="text-base font-semibold">
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <p className="text-sm font-semibold text-foreground">{userName}</p>
+            <p className="text-sm font-semibold text-foreground text-center">
+              {userName} {userLastName}
+            </p>
           </div>
 
           <nav className="grid gap-2" aria-label="Sidebar principal">
