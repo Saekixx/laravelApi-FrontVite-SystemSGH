@@ -86,7 +86,7 @@ class AuthController extends Controller
             'last_name' => 'required|string|max:80',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'dni' => 'required|string|max:20|unique:users,dni,' . $user->id,
+            'dni' => 'nullable|string|max:20|unique:users,dni,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -100,13 +100,14 @@ class AuthController extends Controller
         $user->address = $request->address;
         $user->last_name = $request->last_name;
         $user->phone = $request->phone;
-        $user->dni = $request->dni;
         $user->email = $request->email;
 
         // Si se proporciona una nueva contraseña, la encriptamos antes de guardarla
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
+        // Si se proporciona un nuevo DNI, lo actualizamos
+        if ($request->has('dni')) $user->dni = $request->dni;
         // Si se proporciona un nuevo avatar, lo almacenamos y actualizamos la ruta en el perfil del usuario
         if ($request->hasFile('avatar')) {
             // Borramos el avatar viejo si existe para no llenar el disco
