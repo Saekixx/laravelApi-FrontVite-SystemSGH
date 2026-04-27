@@ -1,12 +1,11 @@
 import { DashboardMetricCard } from "@/components/dashboard/DashboardCards";
-import { totalPatients } from "@/components/dashboard/data/dashboardMockData";
 
 function DashboardStatsCards() {
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <DashboardMetricCard
         title="Pacientes totales"
-        value={totalPatients.toString()}
+        value="117"
         description="Registros acumulados"
         trendLabel="+12% vs mes anterior"
       />

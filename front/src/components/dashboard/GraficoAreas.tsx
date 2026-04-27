@@ -5,34 +5,36 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { patientsByMonth } from "@/components/dashboard/data/dashboardMockData";
+import { patientsByBloodType } from "@/components/dashboard/data/dashboardMockData";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-const monthlyChartConfig = {
-  pacientes: {
+const bloodTypeChartConfig = {
+  cantidad: {
     label: "Pacientes",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
-function PatientsByMonthChartCard() {
+interface GraficoAreasProps {
+  title: string;
+  description: string;
+}
+
+function GraficoAreas({ title, description }: GraficoAreasProps) {
   return (
-    <DashboardSectionCard
-      title="Nuevos pacientes por mes"
-      description="Tendencia de registros de pacientes"
-    >
-      <ChartContainer config={monthlyChartConfig} className="h-72 w-full">
-        <AreaChart data={patientsByMonth} accessibilityLayer>
+    <DashboardSectionCard title={title} description={description}>
+      <ChartContainer config={bloodTypeChartConfig} className="h-72 w-full">
+        <AreaChart data={patientsByBloodType} accessibilityLayer>
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="tipo"
             tickLine={false}
             axisLine={false}
             tickMargin={8}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Area
-            dataKey="pacientes"
+            dataKey="cantidad"
             type="monotone"
             fill="var(--color-pacientes)"
             fillOpacity={0.2}
@@ -45,4 +47,4 @@ function PatientsByMonthChartCard() {
   );
 }
 
-export { PatientsByMonthChartCard };
+export { GraficoAreas };

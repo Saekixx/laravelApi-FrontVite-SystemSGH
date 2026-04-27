@@ -1,7 +1,7 @@
 import { SideBar } from "@/components/SideBar";
 import { DashboardStatsCards } from "@/components/dashboard/DashboardStatsCards";
-import { PatientsByMonthChartCard } from "@/components/dashboard/PatientsByMonthChartCard";
-import { PatientsByGenderChartCard } from "@/components/dashboard/PatientsByGenderChartCard";
+import { GraficoAreas } from "@/components/dashboard/GraficoAreas";
+import { GraficoBarras } from "@/components/dashboard/GraficoBarras";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -30,8 +30,14 @@ function DashboardPage() {
           <DashboardStatsCards />
 
           <section className="grid gap-6 xl:grid-cols-2">
-            <PatientsByMonthChartCard />
-            <PatientsByGenderChartCard />
+            <GraficoAreas
+              title="Tipo de Sangre"
+              description="Composición actual de pacientes por tipo de sangre"
+            />
+            <GraficoBarras
+              title="Distribución por Genero"
+              description="Composición actual de pacientes por género"
+            />
           </section>
         </section>
       </div>

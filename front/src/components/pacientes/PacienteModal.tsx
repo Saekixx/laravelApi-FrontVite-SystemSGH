@@ -184,14 +184,24 @@ function PacienteModal({
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="tipo_sangre">Tipo de Sangre</Label>
-                  <Input
-                    id="tipo_sangre"
+                  <Select
                     value={values.tipo_sangre}
-                    onChange={(e) =>
-                      handleChange("tipo_sangre", e.target.value)
-                    }
-                    placeholder="Ej: O+"
-                  />
+                    onValueChange={(val) => handleChange("tipo_sangre", val)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecciona tipo de sangre" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="A+">A+</SelectItem>
+                      <SelectItem value="A-">A-</SelectItem>
+                      <SelectItem value="B+">B+</SelectItem>
+                      <SelectItem value="B-">B-</SelectItem>
+                      <SelectItem value="AB+">AB+</SelectItem>
+                      <SelectItem value="AB-">AB-</SelectItem>
+                      <SelectItem value="O+">O+</SelectItem>
+                      <SelectItem value="O-">O-</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="seguro_medico">Seguro Médico</Label>

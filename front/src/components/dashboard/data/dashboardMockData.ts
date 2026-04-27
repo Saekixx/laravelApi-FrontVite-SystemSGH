@@ -1,10 +1,12 @@
-export const patientsByMonth = [
-  { month: "Ene", pacientes: 18 },
-  { month: "Feb", pacientes: 24 },
-  { month: "Mar", pacientes: 21 },
-  { month: "Abr", pacientes: 29 },
-  { month: "May", pacientes: 31 },
-  { month: "Jun", pacientes: 36 },
+export const patientsByBloodType = [
+  { tipo: "A+", cantidad: 12 },
+  { tipo: "A-", cantidad: 7 },
+  { tipo: "B+", cantidad: 10 },
+  { tipo: "B-", cantidad: 5 },
+  { tipo: "AB+", cantidad: 4 },
+  { tipo: "AB-", cantidad: 3 },
+  { tipo: "O+", cantidad: 15 },
+  { tipo: "O-", cantidad: 8 },
 ];
 
 export const patientsByGender = [
@@ -12,8 +14,3 @@ export const patientsByGender = [
   { genero: "Femenino", cantidad: 63 },
   { genero: "Otro", cantidad: 9 },
 ];
-
-export const totalPatients = patientsByGender.reduce(
-  (total, row) => total + row.cantidad,
-  0,
-);

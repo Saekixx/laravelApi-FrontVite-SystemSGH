@@ -17,12 +17,14 @@ const genderChartConfig = {
   },
 } satisfies ChartConfig;
 
-function PatientsByGenderChartCard() {
+interface GraficoBarrasProps {
+  title: string;
+  description: string;
+}
+
+function GraficoBarras({ title, description }: GraficoBarrasProps) {
   return (
-    <DashboardSectionCard
-      title="Distribución por género"
-      description="Composición actual de pacientes"
-    >
+    <DashboardSectionCard title={title} description={description}>
       <ChartContainer config={genderChartConfig} className="h-72 w-full">
         <BarChart data={patientsByGender} accessibilityLayer>
           <CartesianGrid vertical={false} />
@@ -45,4 +47,4 @@ function PatientsByGenderChartCard() {
   );
 }
 
-export { PatientsByGenderChartCard };
+export { GraficoBarras };
