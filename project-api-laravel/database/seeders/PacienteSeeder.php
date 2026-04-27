@@ -20,7 +20,7 @@ class PacienteSeeder extends Seeder
                 'nombres' => 'Juan',
                 'apellidos' => 'Pérez',
                 'fecha_nacimiento' => '1990-01-01',
-                'genero' => 'Masculino',
+                'genero' => 'Otro',
                 'celular' => '555123456',
                 'email' => 'juan.perez@example.com',
                 'tipo_sangre' => 'O+',

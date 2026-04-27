@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\DashboardController;
 
 // Rutas públicas para autenticación
 Route::post('/login', [AuthController::class, 'login']);
@@ -31,4 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/pacientes/{id}', [PacienteController::class, 'update']);
     Route::put('/pacientes/activate/{id}', [PacienteController::class, 'isActive']);
     Route::delete('/pacientes/{id}', [PacienteController::class, 'destroy']);
+    // Rutas para el dashboard
+    Route::get('/dashboard/cards-data', [DashboardController::class, 'CardsData']);
+    Route::get('/dashboard/chart-genero', [DashboardController::class, 'ChartGeneroData']);
+    Route::get('/dashboard/chart-sangre', [DashboardController::class, 'ChartSangreData']);
 });
