@@ -8,8 +8,6 @@ import {
   actualizarProfile,
 } from "@/service/Auth/AuthService";
 
-import type { UsuarioAuth } from "@/types/auth";
-
 import type {
   CredencialesLogin,
   DatosRegistro,

@@ -6,7 +6,11 @@ import type {
   PacienteResponse,
 } from "@/types/Api/Paciente/pacienteResponse";
 
-import type { PacienteFormValues } from "@/types/paciente";
+import type {
+  PacienteFormValues,
+  PacienteChartsData as PacienteChartData,
+  PacienteCardsData as PacienteCardData,
+} from "@/types/paciente";
 
 export const getAllPacientes = async (): Promise<AllGetPacienteResponse> => {
   return await getConfig<AllGetPacienteResponse>("pacientes");
@@ -45,4 +49,16 @@ export const deletePaciente = async (
   id: number,
 ): Promise<DestroyPacienteResponse> => {
   return await deleteConfig<DestroyPacienteResponse>(`pacientes/${id}`);
+};
+
+export const PacienteCardsData = async (): Promise<PacienteCardData> => {
+  return await getConfig<PacienteCardData>("dashboard/cards-data");
+};
+
+export const PacienteChartGeneroData = async () => {
+  return await getConfig<PacienteChartData[]>("dashboard/chart-genero");
+};
+
+export const PacienteChartSangreData = async () => {
+  return await getConfig<PacienteChartData[]>("dashboard/chart-sangre");
 };

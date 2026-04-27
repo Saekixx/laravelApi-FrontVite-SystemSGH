@@ -42,3 +42,16 @@ export type ClaveColumnaPaciente =
   | "estado"
   | "created_at"
   | "updated_at";
+
+export type PacienteCardsData = {
+  total_pacientes: number;
+  pacientes_activos: number;
+  pacientes_inactivos: number;
+  edad_promedio: number;
+};
+
+export type PacienteChartsData = {
+  tipo?: string;
+  genero?: string; // Solo para gráfico de género
+  cantidad: number;
+};

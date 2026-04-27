@@ -1,16 +1,49 @@
 import { SideBar } from "@/components/SideBar";
-import { DashboardStatsCards } from "@/components/dashboard/DashboardStatsCards";
+import { DashboardMetricCard } from "@/components/dashboard/DashboardCards";
 import { GraficoAreas } from "@/components/dashboard/GraficoAreas";
 import { GraficoBarras } from "@/components/dashboard/GraficoBarras";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { usePaciente } from "@/hooks/usePaciente";
 
 function DashboardPage() {
   const { cargarPerfilCompleto } = useAuth();
+  const {
+    onCardsData,
+    onChartSangreData,
+    onChartGeneroData,
+    totalPacientes,
+    pacientesActivos,
+    pacientesInactivos,
+    pacientesEdadPromedio,
+    pacientesPorGenero,
+    pacientesPorTipoSangre,
+  } = usePaciente();
 
   useEffect(() => {
-    cargarPerfilCompleto();
-  }, [cargarPerfilCompleto]);
+    // Usamos un flag para evitar doble ejecución en StrictMode
+    let mounted = true;
+
+    const cargarTodo = async () => {
+      try {
+        // Ejecutamos las cargas. No usamos await en cascada para que sea más rápido
+        if (mounted) {
+          cargarPerfilCompleto();
+          onCardsData();
+          onChartSangreData();
+          onChartGeneroData();
+        }
+      } catch (error) {
+        console.error("Error cargando el dashboard:", error);
+      }
+    };
+
+    cargarTodo();
+
+    return () => {
+      mounted = false;
+    };
+  }, []); // ARRAY VACÍO: Esto asegura que solo cargue UNA vez al entrar.
 
   return (
     <main className="h-screen bg-background p-4 sm:p-6">
@@ -27,16 +60,39 @@ function DashboardPage() {
             </p>
           </header>
 
-          <DashboardStatsCards />
+          <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <DashboardMetricCard
+              title="Total de Pacientes"
+              value={String(totalPacientes)}
+              description="..."
+            />
+            <DashboardMetricCard
+              title="Pacientes Activos"
+              value={String(pacientesActivos)}
+              description="..."
+            />
+            <DashboardMetricCard
+              title="Pacientes Inactivos"
+              value={String(pacientesInactivos)}
+              description="..."
+            />
+            <DashboardMetricCard
+              title="Edad Promedio"
+              value={String(pacientesEdadPromedio)}
+              description="..."
+            />
+          </section>
 
           <section className="grid gap-6 xl:grid-cols-2">
             <GraficoAreas
               title="Tipo de Sangre"
-              description="Composición actual de pacientes por tipo de sangre"
+              description="Distribución por grupo sanguíneo"
+              data={pacientesPorTipoSangre}
             />
             <GraficoBarras
-              title="Distribución por Genero"
-              description="Composición actual de pacientes por género"
+              title="Distribución por Género"
+              description="Pacientes por género"
+              data={pacientesPorGenero}
             />
           </section>
         </section>

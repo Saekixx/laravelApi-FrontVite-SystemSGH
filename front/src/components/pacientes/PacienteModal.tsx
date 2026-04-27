@@ -75,6 +75,11 @@ function PacienteModal({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    // Validación extra para fecha de nacimiento
+    if (!values.fecha_nacimiento) {
+      alert("La fecha de nacimiento es obligatoria.");
+      return;
+    }
     onSave(values); // Enviamos el objeto completo de estados
     onOpenChange(false);
   };
